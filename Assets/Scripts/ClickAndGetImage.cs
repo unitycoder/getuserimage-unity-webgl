@@ -29,45 +29,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using UnityEngine;
-using System;
-using System.Collections;
 
-public class ClickAndGetImage : MonoBehaviour {
+namespace webgl.tools
+{
 
-    void OnMouseOver()
+    public class ClickAndGetImage : MonoBehaviour
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            // NOTE: gameObject.name MUST BE UNIQUE!!!!
-            GetImage.GetImageFromUserAsync(gameObject.name, "ReceiveImage");
-        }
-    }
 
-    static string s_dataUrlPrefix = "data:image/png;base64,";
-    public void ReceiveImage(string dataUrl)
-    {
-        if (dataUrl.StartsWith(s_dataUrlPrefix))
+        void OnMouseOver()
         {
-            byte[] pngData = System.Convert.FromBase64String(dataUrl.Substring(s_dataUrlPrefix.Length));
-
-            // Create a new Texture (or use some old one?)
-            Texture2D tex = new Texture2D(1, 1); // does the size matter?
-            if (tex.LoadImage(pngData))
+            if (Input.GetMouseButtonDown(0))
             {
-                Renderer renderer = GetComponent<Renderer>();
+                // NOTE: gameObject.name MUST BE UNIQUE!!!!
+                GetImage.GetImageFromUserAsync(gameObject.name, "ReceiveImage");
+            }
+        }
 
-                renderer.material.mainTexture = tex;
+        static string s_dataUrlPrefix = "data:image/png;base64,";
+        public void ReceiveImage(string dataUrl)
+        {
+            if (dataUrl.StartsWith(s_dataUrlPrefix))
+            {
+                byte[] pngData = System.Convert.FromBase64String(dataUrl.Substring(s_dataUrlPrefix.Length));
+
+                // Create a new Texture (or use some old one?)
+                Texture2D tex = new Texture2D(1, 1); // does the size matter?
+                if (tex.LoadImage(pngData))
+                {
+                    Renderer renderer = GetComponent<Renderer>();
+
+                    renderer.material.mainTexture = tex;
+                }
+                else
+                {
+                    Debug.LogError("could not decode image");
+                }
             }
             else
             {
-                Debug.LogError("could not decode image");
+                Debug.LogError("Error getting image:" + dataUrl);
             }
         }
-        else
-        {
-            Debug.LogError("Error getting image:" + dataUrl);
-        }
     }
+
 }
-
-

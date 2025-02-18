@@ -29,28 +29,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using UnityEngine;
-using System.Collections;
 using System.Runtime.InteropServices;
 
-public class GetImage {
+namespace webgl.tools
+{
 
-    #if UNITY_WEBGL
+    public class GetImage
+    {
+
+#if UNITY_WEBGL
 
         [DllImport("__Internal")]
         private static extern void getImageFromBrowser(string objectName, string callbackFuncName);
 
-    #endif
+#endif
 
-    static public void GetImageFromUserAsync(string objectName, string callbackFuncName)
-    {
-        #if UNITY_WEBGL
+        static public void GetImageFromUserAsync(string objectName, string callbackFuncName)
+        {
+#if UNITY_WEBGL
 
             getImageFromBrowser(objectName, callbackFuncName);
 
-        #else
+#else
 
             Debug.LogError("Not implemented in this platform");
 
-        #endif
+#endif
+        }
     }
 }
